@@ -35,6 +35,18 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end  
 
+  describe 'GET #new' do 
+    before { get :new }
+
+    it 'assigns a new Question to @question' do 
+      expect(assigns(:question)).to be_a_new(Question)#проверяем вопрос на новый объект класса Question
+    end
+
+    it 'renders new view' do 
+      expect(response).to render_template :new
+    end
+  end
+
   # describe 'GET #index' do 
   #   it 'populates an array of all questions' do 
   #     question1 = FactoryBot.create(:question) #создать вопрос по шаблону factories/questions.rb
