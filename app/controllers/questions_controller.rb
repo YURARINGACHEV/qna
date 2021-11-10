@@ -1,5 +1,4 @@
 class QuestionsController < ApplicationController
-
   before_action :load_question, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -48,6 +47,4 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body)
   end
-
-
 end
