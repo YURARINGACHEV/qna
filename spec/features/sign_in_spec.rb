@@ -6,8 +6,9 @@ feature 'Use can sign in', %q{
 	I`d like to be able to sign in
 } do
 
-	given(:user) { User.create!(email: 'user@test.com', password: '12345678') }  #элиас let
-  
+	# given(:user) { User.create!(email: 'user@test.com', password: '12345678') }  #элиас let
+  given(:user) { create(:user) }
+
   background { visit visit new_user_session_path } #элиас before
 
 	scenario 'Registered user tries to sign in' do
