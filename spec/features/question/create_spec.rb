@@ -27,5 +27,11 @@ feature 'Use can create question', %q{
     expect(page).to have_content "Text text tex"
   end 
   scenario 'Anuthenticated user asks a question with errors'
-  scenario 'Unanuthenticated user tries to  asks a question'
+
+  scenario 'Unanuthenticated user tries to  asks a question' do
+  	visit questions_path
+    click_on 'Ask question'
+
+    expect(page).to have_content "You need to sign in or sign up before continuing."
+  end
 end
