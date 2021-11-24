@@ -1,2 +1,10 @@
 h1= @question.title
 p=  @question.body
+
+table        
+  tr
+    th body
+
+  = render @question.answers
+
+=render 'answers/form'

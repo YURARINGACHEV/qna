@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
-  let(:answer) { question.answers.create(attributes_for(:answer)) }
-  # let(:answer) { create(:answer, question: question) }
+  # let(:answer) { question.answers.create(attributes_for(:answer)) }
+  let(:answer) { create(:answer, question: question) }
 
    describe 'GET #new' do
     before { get :new, params: { question_id: question }}

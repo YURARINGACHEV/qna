@@ -1,17 +1,18 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, only: [:create]
   before_action :find_question, only: [:new, :create]
 
   def new
-    @answer = @question.answers.new
   end
 
   def create
     @answer = @question.answers.new(answer_params)
+    @answer.user = current_user
 
     if @answer.save
-      redirect_to @question
+      redirect_to @question, notice: "Your answer successfuly posted."
     else
-      render :new
+      render 'questions/show'
     end
   end
 
