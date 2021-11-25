@@ -40,7 +40,7 @@ class QuestionsController < ApplicationController
       @question.destroy
       redirect_to questions_path, notice: "Question deleted"
     else
-      redirect_to questions_path, notice: "You cannot delete someone else's question"
+      redirect_to questions_path
     end
   end
 

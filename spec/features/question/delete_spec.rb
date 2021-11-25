@@ -16,25 +16,25 @@ feature 'User can delete own question', %q{
     sign_in(user)
     visit question_path(question)
 
-    click_on "Delete"
+    click_on "Delete question"
  
     expect(page).to have_content "Question deleted"
     expect(page).to_not have_content question.title
   end
 
-  scenario 'Authenticated user can delete own questions' do
+  scenario 'Other user can delete own questions' do
     sign_in(bad_user)
 
     visit question_path(question)
 
     expect(page).to have_content question.title
-    expect(page).to_not have_content "Delete"
+    expect(page).to_not have_content "Delete question"
   end
 
   scenario 'Unauthenticated user can delete own questions' do
     visit question_path(question)
 
     expect(page).to have_content question.title
-    expect(page).to_not have_content "Delete"
+    expect(page).to_not have_content "Delete question"
   end
 end
