@@ -9,7 +9,7 @@ feature 'Use can sign in', %q{
 	# given(:user) { User.create!(email: 'user@test.com', password: '12345678') }  #элиас let
   given(:user) { create(:user) }
 
-  background { visit visit new_user_session_path } #элиас before
+  background { visit new_user_session_path } #элиас before
 
 	scenario 'Registered user tries to sign in' do
     fill_in 'Email', with: user.email
