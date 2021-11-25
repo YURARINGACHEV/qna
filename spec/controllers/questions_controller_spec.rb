@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do 
-    let(:questions) { create_list(:question, 3) } #задавать начальные данные.
+    let(:questions) { create_list(:question, 3, user: user) } #задавать начальные данные.
                                                   #let создает метод questions 
     
     before { get :index }
@@ -130,19 +130,34 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'DELETE #destroy' do
     before { login(user) } 
-     
-    let! (:question) { create(:question) }
-
-    it 'deletes the question' do 
-      expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
-    end
     
-    it 'redirects the index' do 
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to questions_path
+    let! (:question) { create(:question, user: user) }
+    let!(:other_user) { create(:user) } 
+    let! (:other_question) { create(:question, user: other_user) }
+
+    context 'Authorized user' do
+
+      it 'deletes the question' do 
+        expect { delete :destroy, params: { id: question } }.to change(Question.where(user: user), :count).by(-1)
+      end
+    
+      it 'redirects the index' do 
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'Authorized other user' do
+      it 'deletes the question' do 
+        expect { delete :destroy, params: { id: other_question } }.to_not change(Question, :count)
+      end
+    
+      it 'redirects the index' do 
+        delete :destroy, params: { id: other_question }
+        expect(response).to redirect_to questions_path
+      end
     end
   end
-
   # describe 'GET #index' do 
   #   it 'populates an array of all questions' do 
   #     question1 = FactoryBot.create(:question) #создать вопрос по шаблону factories/questions.rb
