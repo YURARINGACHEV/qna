@@ -13,7 +13,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: "Your answer successfuly posted."
     else
-      render 'questions/show'
+      redirect_to question_path(@answer.question), notice: "Body can't be blank"
     end
   end
 

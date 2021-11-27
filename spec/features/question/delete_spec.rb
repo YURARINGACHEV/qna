@@ -27,13 +27,13 @@ feature 'User can delete own question', '
     visit question_path(question)
 
     expect(page).to have_content question.title
-    expect(page).to_not have_content 'Delete question'
+    expect(page).to_not have_link 'Delete question'
   end
 
   scenario 'Unauthenticated user can delete own questions' do
     visit question_path(question)
 
     expect(page).to have_content question.title
-    expect(page).to_not have_content 'Delete question'
+    expect(page).to_not have_link 'Delete question'
   end
 end

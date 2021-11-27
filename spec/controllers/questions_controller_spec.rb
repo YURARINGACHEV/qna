@@ -123,7 +123,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'does not save the question' do
         question.reload
-        expect(question.title).to eq 'MyString'
+        expect(question.title).to eq 'Title'
         expect(question.body).to eq 'MyText'
       end
 
