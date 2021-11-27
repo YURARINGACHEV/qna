@@ -1,19 +1,17 @@
 require 'rails_helper'
 
-feature 'User can create answer', %q{
+feature 'User can create answer', '
   An anuthenticated user
   can leave an answer
   to the question
-} do
-
+' do
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
   describe 'Authenticated user' do
-
     background do
       sign_in(user)
-      
+
       visit question_path(question)
     end
 
@@ -21,7 +19,7 @@ feature 'User can create answer', %q{
       fill_in 'Body', with: 'answer answer answer'
       click_on 'Answer'
 
-      expect(page).to have_content "Your answer successfuly posted."
+      expect(page).to have_content 'Your answer successfuly posted.'
       expect(page).to have_content 'answer answer answer'
     end
 
@@ -32,8 +30,8 @@ feature 'User can create answer', %q{
     end
   end
   scenario 'Unanuthenticated user tries  answer to the question' do
-  	visit question_path(question)
+    visit question_path(question)
 
-    expect(page).to_not have_content "Answer"
+    expect(page).to_not have_content 'Answer'
   end
 end

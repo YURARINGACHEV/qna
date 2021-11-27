@@ -5,8 +5,8 @@ RSpec.describe AnswersController, type: :controller do
   let!(:question) { create(:question, user: user) }
   let!(:answer) { create(:answer, question: question, user: user) }
 
-   describe 'GET #new' do
-    before { get :new, params: { question_id: question }}
+  describe 'GET #new' do
+    before { get :new, params: { question_id: question } }
 
     it 'renders new view' do
       expect(response).to render_template :new
@@ -17,7 +17,10 @@ RSpec.describe AnswersController, type: :controller do
     before { login(user) }
     context 'with valid attributes' do
       it 'Authenticated user save a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers.where(user:user), :count).by(1) 
+        expect do
+          post :create,
+               params: { question_id: question, answer: attributes_for(:answer) }
+        end.to change(question.answers.where(user: user), :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -28,7 +31,10 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'Authenticated user does not save the answer' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }.to_not change(Answer, :count)
+        expect do
+          post :create,
+               params: { question_id: question, answer: attributes_for(:answer, :invalid) }
+        end.to_not change(Answer, :count)
       end
 
       it 're-renders new view' do
@@ -39,34 +45,32 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) } 
-    
+    before { login(user) }
+
     let!(:question) { create(:question, user: user) }
-    let!(:other_user) { create(:user) } 
+    let!(:other_user) { create(:user) }
     let!(:other_answer) { create(:answer, question: question, user: other_user) }
 
     context 'Authorized user' do
-
-      it 'deletes the answer' do 
+      it 'deletes the answer' do
         expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
       end
-    
-      it 'redirects the index' do 
+
+      it 'redirects the index' do
         delete :destroy, params: { id: answer }
         expect(response).to redirect_to question_path(question)
       end
     end
 
     context 'Authorized other user' do
-      it 'deletes the question' do 
+      it 'deletes the question' do
         expect { delete :destroy, params: { id: other_answer } }.to_not change(Answer, :count)
       end
-    
-      it 'redirects the index' do 
+
+      it 'redirects the index' do
         delete :destroy, params: { id: other_answer }
         expect(response).to redirect_to question_path(other_answer.question)
       end
     end
   end
 end
-

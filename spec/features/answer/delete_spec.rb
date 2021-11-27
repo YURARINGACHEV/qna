@@ -1,11 +1,10 @@
 require 'rails_helper'
 
-feature 'User can delete own answer', %q{
+feature 'User can delete own answer', '
   In order to delete answer
   As  Authenticated User
   I`d like to be able to delete own question
-} do
-
+' do
   given(:bad_user) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
@@ -17,9 +16,9 @@ feature 'User can delete own answer', %q{
     sign_in(user)
     visit question_path(answer.question)
 
-    click_on "Delete answer"
- 
-    expect(page).to have_content "Answer deleted"
+    click_on 'Delete answer'
+
+    expect(page).to have_content 'Answer deleted'
     expect(page).to_not have_content answer.body
   end
 
@@ -28,13 +27,13 @@ feature 'User can delete own answer', %q{
     visit question_path(question)
 
     expect(page).to have_content answer.body
-    expect(page).to_not have_content "Delete answer"
+    expect(page).to_not have_content 'Delete answer'
   end
 
   scenario 'Unauthenticated user can delete own questions' do
     visit question_path(question)
 
     expect(page).to have_content answer.body
-    expect(page).to_not have_content "Delete answer"
+    expect(page).to_not have_content 'Delete answer'
   end
 end

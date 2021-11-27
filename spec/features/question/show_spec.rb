@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-feature 'User can view the question and the answers to it', %q{
+feature 'User can view the question and the answers to it', "
   In order to get answer from a community
   As any user
   I'd like to be able to view question and answers to it
-} do
+" do
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:answer) { create(:answer, question: question, user: user) }
