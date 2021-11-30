@@ -16,6 +16,8 @@ Rails.application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
 
+  # config.logger = Logger.new(STDOUT)
+
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
@@ -29,6 +31,9 @@ Rails.application.configure do
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
+  
+  config.action_mailer.default_url_options = { host: 'qna.test' }
+  Rails.application.routes.default_url_options[:host] = '0.0.0.0:3001'
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
