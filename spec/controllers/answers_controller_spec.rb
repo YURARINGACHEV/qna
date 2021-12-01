@@ -17,15 +17,12 @@ RSpec.describe AnswersController, type: :controller do
     before { login(user) }
     context 'with valid attributes' do
       it 'Authenticated user save a new answer in the database' do
-        expect do
-          post :create,
-               params: { question_id: question, answer: attributes_for(:answer) }
-        end.to change(question.answers.where(user: user), :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(question.answers.where(user: user), :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to assigns(:question)
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :create
       end
     end
 
@@ -33,13 +30,13 @@ RSpec.describe AnswersController, type: :controller do
       it 'Authenticated user does not save the answer' do
         expect do
           post :create,
-               params: { question_id: question, answer: attributes_for(:answer, :invalid) }
+               params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
         end.to_not change(Answer, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to redirect_to question_path(answer.question)
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :create
       end
     end
   end

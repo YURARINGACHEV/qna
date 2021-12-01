@@ -7,13 +7,7 @@ p=  @question.body
                                 method: :delete,
                                 data: { confirm: 'Are you sure?' }
 
-=render 'answers/form'
-
 .answers
-  table        
-    tr
-      th body
+  = render @question.answers
 
-    = render @question.answers
-
-
+= render 'answers/form'

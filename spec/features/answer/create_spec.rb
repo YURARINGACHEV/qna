@@ -11,8 +11,7 @@ feature 'User can create answer', '
   describe 'Authenticated user' do
     background do
       sign_in(user)
-      # wait_for_ajax
-
+ 
       visit question_path(question)
     end
 
@@ -21,7 +20,7 @@ feature 'User can create answer', '
       click_on 'Answer'
 
       expect(current_path).to eq question_path(question)
-      expect(page).to have_content 'Your answer successfuly posted.'
+
       within '.answers' do
         expect(page).to have_content 'answer answer answer'
       end
