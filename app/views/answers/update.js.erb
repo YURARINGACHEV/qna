@@ -1,0 +1,5 @@
+$('.update-errors[data-form-id="<%= @answer.id %>"]').html('<%= render 'shared/errors', resource: @answer %>');
+
+<% if !@answer.errors.present? %>
+  $('.answer[data-answer-form-id="<%= @answer.id %>"]').html('<%= j render @answer %>');
+<% end %>

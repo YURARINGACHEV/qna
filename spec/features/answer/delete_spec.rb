@@ -5,6 +5,7 @@ feature 'User can delete own answer', '
   As  Authenticated User
   I`d like to be able to delete own question
 ' do
+
   given(:bad_user) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
