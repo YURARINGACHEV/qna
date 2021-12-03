@@ -8,6 +8,11 @@
                         method: :delete,
                         data: { confirm: 'Are you sure?' },
                         remote: true
+      -if answer.best
+        p 'It is the best answer'
+      - else
+        = link_to "Mark as best"
+
 
     = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
       .update-errors data-form-id="#{answer.id}"
