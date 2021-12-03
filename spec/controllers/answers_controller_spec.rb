@@ -70,23 +70,23 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'Authorized user' do
       it 'deletes the answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(Answer, :count).by(-1)
       end
 
       it 'redirects the index' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context 'Authorized other user' do
       it 'deletes the question' do
-        expect { delete :destroy, params: { id: other_answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: other_answer }, format: :js }.to_not change(Answer, :count)
       end
 
       it 'redirects the index' do
-        delete :destroy, params: { id: other_answer }
-        expect(response).to redirect_to question_path(other_answer.question)
+        delete :destroy, params: { id: other_answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end

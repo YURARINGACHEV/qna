@@ -13,15 +13,16 @@ feature 'User can delete own answer', '
 
   background { visit question_path(question) }
 
-  scenario 'Authenticated user can delete own answer' do
+  scenario 'Authenticated user can delete own answer', js: true do
     sign_in(user)
     visit question_path(answer.question)
 
     expect(page).to have_content answer.body
 
-    click_on 'Delete answer'
+    page.accept_confirm  do
+      click_on 'Delete answer'
+    end
 
-    expect(page).to have_content 'Answer deleted'
     expect(page).to_not have_content answer.body
   end
 
