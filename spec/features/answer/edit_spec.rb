@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'User can edit his answer', %{
+feature 'User can edit his question', %{
   In order to correct mistakes
   As an author of answer
   i`d like to be able to edit answer
@@ -12,41 +12,39 @@ feature 'User can edit his answer', %{
   given!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'Authenticated user' do
-    describe 'Authenticated user' do
-      scenario 'edits his answer', js: true do
-        sign_in(user)
+    scenario 'edits his question', js: true do
+      sign_in(user)
  
-        visit question_path(question)
+      visit question_path(question)
 
-        click_on 'Edit answer'
+      click_on 'Edit answer'
 
-        within '.answers' do 
-          fill_in "Your answer", with: 'edited answer'
-          click_on 'Save'
+      within '.answers' do 
+        fill_in "Your answer", with: 'edited answer'
+        click_on 'Save'
 
-          expect(page).to_not have_content answer.body
-          expect(page).to have_content 'edited answer'
-          expect(page).to_not have_selector 'textarea'
-        end
+        expect(page).to_not have_content answer.body
+        expect(page).to have_content 'edited answer'
+        expect(page).to_not have_selector 'textarea'
       end
-
-      scenario 'edits his answer with errors', js: true do
-        sign_in(user)
-
-        visit question_path(question)
-
-        click_on 'Edit answer'
-
-        within '.answers' do 
-          fill_in "Your answer", with: ''
-        
-          click_on 'Save'
-
-          expect(page).to have_content "Body can't be blank"
-        end
-      end  
     end
 
+    scenario 'edits his answer with errors', js: true do
+      sign_in(user)
+
+      visit question_path(question)
+
+      click_on 'Edit answer'
+
+      within '.answers' do 
+        fill_in "Your answer", with: ''
+        
+        click_on 'Save'
+
+        expect(page).to have_content "Body can't be blank"
+      end
+    end  
+    
     scenario "tries to edits other user`s question" do 
       sign_in(bad_user)
       visit question_path(question)
