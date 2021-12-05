@@ -36,13 +36,13 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     context 'with valid attributes' do
       it 'changes answer attributes' do
-        patch :update, params: { id:answer, answer: { body: 'new body' } }, format: :js
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         answer.reload
         expect(answer.body).to eq 'new body'
       end
 
       it 'renders update view' do
-        patch :update, params: { id:answer, answer: { body: 'new body' } }, format: :js
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         expect(response).to render_template :update
       end
     end
@@ -50,15 +50,22 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
         expect do 
-          patch :update, params: { id:answer, answer:  attributes_for(:answer, :invalid) }, format: :js
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         end.to_not change(answer, :body)
       end
 
       it 'renders update view' do
-        patch :update, params: { id:answer, answer:  attributes_for(:answer, :invalid) }, format: :js
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
       end
-    end    
+    end 
+  end
+
+  describe 'POST #mark_as_best' do
+    it 'mark best answer' do
+     post :mark_as_best, params: { id: answer }, format: :js
+     expect(assigns(:answer)).to be_best
+    end
   end
 
   describe 'DELETE #destroy' do

@@ -19,6 +19,5 @@ RSpec.describe Answer, type: :model do
       answer.mark_as_best
       expect(answer).to be_best
     end
-
   end
 end

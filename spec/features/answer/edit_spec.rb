@@ -43,8 +43,8 @@ feature 'User can edit his question', %{
 
         expect(page).to have_content "Body can't be blank"
       end
-    end  
-    
+    end
+        
     scenario "tries to edits other user`s question" do 
       sign_in(bad_user)
       visit question_path(question)

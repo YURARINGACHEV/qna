@@ -11,7 +11,7 @@
       -if answer.best
         p 'It is the best answer'
       - else
-        = link_to "Mark as best"
+        = link_to "Mark as best", mark_as_best_answer_path(answer),  method: :post, remote: true
 
 
     = form_with model: answer, local: false, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
