@@ -14,32 +14,34 @@ feature 'Use can create question', '
       visit questions_path
       click_on 'Ask question'
     end
+ 
+    describe 'asks' do
+      background do
+        fill_in 'Title', with: 'Test question'
+        fill_in 'Body', with: 'Text text tex'
+      end
 
-    scenario 'asks a question' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Text text tex'
-      click_on 'Ask'
+      scenario 'a question' do
+        click_on 'Ask'
 
-      expect(page).to have_content 'Your question successfully created.'
-      expect(page).to have_content 'Test question'
-      expect(page).to have_content 'Text text tex'
+        expect(page).to have_content 'Your question successfully created.'
+        expect(page).to have_content 'Test question'
+        expect(page).to have_content 'Text text tex'
+      end
+
+      scenario 'a question with attached files' do
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Ask'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
     end
-
+    
     scenario 'asks a question with errors' do
       click_on 'Ask'
 
       expect(page).to have_content "Title can't be blank"
-    end
-
-    scenario 'asks a question with attached file' do
-      fill_in 'Title', with: 'Test question'
-      fill_in 'Body', with: 'Text text tex'
-      
-      attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
-      click_on 'Ask'
-
-      expect(page).to have_link 'rails_helper.rb'
-      expect(page).to have_link 'spec_helper.rb'
     end
   end
 

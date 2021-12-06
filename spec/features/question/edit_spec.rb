@@ -11,40 +11,49 @@ feature 'User can edit his question', %{
   given!(:question) { create(:question, user: user) }
 
   describe 'Authenticated user' do
-    scenario 'edits his question', js: true do
-      sign_in(user)
-      visit question_path(question)
+    describe 'author' do 
+      background do 
+        sign_in(user)
+        visit question_path(question)
 
-      click_on 'Edit question'
-
-      within '.question' do 
-        fill_in "Title question", with: 'edited question title'
-        fill_in "Body question", with: 'edited question body'
-        click_on 'Save question'
-
-        expect(page).to_not have_content question.title
-        expect(page).to_not have_content question.body
-        expect(page).to have_content 'edited question title'
-        expect(page).to have_content 'edited question body'
-        expect(page).to_not have_selector 'textarea'
+        click_on 'Edit question'
       end
-    end
+      scenario 'edits his question', js: true do
+        within '.question' do 
+          fill_in "Title question", with: 'edited question title'
+          fill_in "Body question", with: 'edited question body'
+          click_on 'Save question'
 
-    scenario 'edits his answer with errors', js: true do
-      sign_in(user)
-      visit question_path(question)
+          expect(page).to_not have_content question.title
+          expect(page).to_not have_content question.body
+          expect(page).to have_content 'edited question title'
+          expect(page).to have_content 'edited question body'
+          expect(page).to_not have_selector 'textarea'
+        end
+      end
 
-      click_on 'Edit question'
+      scenario 'edit question with attached files', js: true do
+        within '.question' do 
+          fill_in "Title question", with: 'edited question title'
+          fill_in "Body question", with: 'edited question body'
+          attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+          click_on 'Save question'
 
-      within '.question' do 
-        fill_in "Title question", with: ''
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
+      end
+
+      scenario 'edits his answer with errors', js: true do
+        within '.question' do 
+          fill_in "Title question", with: ''
         
-        click_on 'Save question'
+          click_on 'Save question'
 
-        expect(page).to have_content "Title can't be blank"
-      end
-    end  
-
+          expect(page).to have_content "Title can't be blank"
+        end
+      end  
+    end
     scenario "tries to edits other user`s question" do 
       sign_in(bad_user)
 

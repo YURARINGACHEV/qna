@@ -15,14 +15,30 @@ feature 'User can create answer', '
       visit question_path(question)
     end
 
-    scenario 'answer to the question', js: true  do
-      fill_in 'Body', with: 'answer answer answer'
-      click_on 'Answer'
+    describe 'answer' do 
+      background do 
+        fill_in 'Body', with: 'answer answer answer'
+      end
+      
+      scenario 'answer to the question', js: true do
+        fill_in 'Body', with: 'answer answer answer'
+        click_on 'Answer'
 
-      expect(current_path).to eq question_path(question)
+        expect(current_path).to eq question_path(question)
 
-      within '.answers' do
-        expect(page).to have_content 'answer answer answer'
+        within '.answers' do
+          expect(page).to have_content 'answer answer answer'
+        end
+      end
+
+      scenario 'answer to the question with attached files', js: true do      
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Answer'
+      
+        within '.answers' do 
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
+        end
       end
     end
 
