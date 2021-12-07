@@ -21,6 +21,21 @@ feature 'User can delete own question', '
     expect(page).to_not have_content question.title
   end
 
+  scenario 'Is author can delete file', js: true do
+    sign_in(user)
+    visit question_path(question)
+
+    within '.question' do
+      click_on 'Edit question'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb"]
+      click_on 'Save question'
+    end
+
+    expect(page).to have_link 'rails_helper.rb'
+    click_on "Delete file"
+    expect(page).to_not have_link 'rails_helper.rb'
+  end
+
   scenario 'Other user can delete own questions' do
     sign_in(bad_user)
 

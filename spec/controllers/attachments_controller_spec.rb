@@ -1,35 +1,62 @@
 require 'rails_helper'
 
-RSpec.describe AnswersController, type: :controller do
+RSpec.describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
   let(:ohter_user) { create(:user) }
-  let!(:question) { create(:question, user: user) }
-  let(:answer_files) { create(:answer, :files, question: question, user: user) }
+  let(:question_files) { create(:question, :question_files, user: user) }
+  let!(:answer_files) { create(:answer, :answer_files, question: question_files, user: user) }
 
   describe 'DELETE #delete_file' do
     before { login(user) }
+    describe "Answer file" do
+      context 'User tries to delete file on his answer' do
+        it 'deletes the file' do
+          expect { delete :destroy, params: { id: answer_files.files.first }, format: :js }.to change(answer_files.files, :count).by(-1)
+        end
 
-    context 'User tries to delete file on his answer' do
-      it 'deletes the file' do
-        expect { delete :destroy, params: { id: answer_files.files[0] }, format: :js }.to change(answer_files.files, :count).by(-1)
+        it 'redirects to destroy' do
+          delete :destroy, params: { id: answer_files.files.first }, format: :js
+          expect(response).to render_template :destroy
+        end
       end
 
-      it 'redirects to index view' do
-        delete :destroy, params: { id: answer_files.files[0] }, format: :js
-        expect(response).to redirect_to :destroy
+      context 'Authorized other user' do
+    	  before { login(ohter_user) }
+
+        it 'tries to delete file nswer' do
+          expect { delete :destroy, params: { id: answer_files.files.first }, format: :js }.to_not change(answer_files.files, :count)
+        end
+
+        it 'redirects the destroy' do
+          delete :destroy, params: { id: answer_files.files.first }, format: :js
+          expect(response).to render_template :destroy
+        end
       end
     end
 
-    context 'Authorized other user' do
-    	before { login(ohter_user) }
+    describe "Question file" do
+      context 'User tries to delete file on his question' do
+        it 'deletes the file' do
+          expect { delete :destroy, params: { id: question_files.files.first }, format: :js }.to change(question_files.files, :count).by(-1)
+        end
 
-      it 'deletes the question' do
-        expect { delete :destroy, params: { id: answer_files.files[0] }, format: :js }.to_not change(Answer, :count)
+        it 'redirects to destroy' do
+          delete :destroy, params: { id: question_files.files.first }, format: :js
+          expect(response).to render_template :destroy
+        end
       end
 
-      it 'redirects the index' do
-        delete :destroy, params: { id: answer_files.files[0] }, format: :js
-        expect(response).to render_template :destroy
+      context 'Authorized other user' do
+        before { login(ohter_user) }
+
+        it 'tries to delete ' do
+          expect { delete :destroy, params: { id: question_files.files.first }, format: :js }.to_not change(question_files.files, :count)
+        end
+
+        it 'redirects the destroy' do
+          delete :destroy, params: { id: question_files.files.first }, format: :js
+          expect(response).to render_template :destroy
+        end
       end
     end
   end

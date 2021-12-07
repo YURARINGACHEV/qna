@@ -34,7 +34,7 @@ feature 'User can delete own answer', '
     expect(page).to_not have_link 'Delete answer'
   end
 
-   scenario 'IS author can delete attachments', js: true do
+  scenario 'Is author can delete file', js: true do
     sign_in(user)
     visit question_path(answer.question)
 

@@ -7,7 +7,7 @@ FactoryBot.define do
     body
     question
 
-    trait :files do
+    trait :answer_files do
       after(:build) do |answer|
         answer.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb')
       end
