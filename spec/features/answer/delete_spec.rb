@@ -34,6 +34,21 @@ feature 'User can delete own answer', '
     expect(page).to_not have_link 'Delete answer'
   end
 
+   scenario 'IS author can delete attachments', js: true do
+    sign_in(user)
+    visit question_path(answer.question)
+
+    within '.answer' do
+      click_on 'Edit answer'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb"]
+      click_on 'Save'
+    end
+
+    expect(page).to have_link 'rails_helper.rb'
+    click_on "Delete file"
+    expect(page).to_not have_link 'rails_helper.rb'
+  end
+
   scenario 'Unauthenticated user can delete own questions' do
     visit question_path(question)
 

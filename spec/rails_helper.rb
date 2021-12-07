@@ -30,12 +30,14 @@ rescue ActiveRecord::PendingMigrationError => e
   puts e.to_s.strip
   exit 1
 end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods # подключение метода для создания переменнных
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include WaitForAjax, type: :feature
+  config.include ActionDispatch::TestProcess
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
