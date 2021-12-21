@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3, user: user) } # задавать начальные данные.
@@ -28,6 +29,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question # eq - проверка на эквивалент
+    end
+    
+    it 'assigns new link for aswer' do
+      expect(assigns(:answer).links.first).to be_a_new(Link) # eq - проверка на эквивалент
     end
 
     it 'renders show view' do
