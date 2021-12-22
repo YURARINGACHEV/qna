@@ -32,12 +32,8 @@ feature 'User can add linkes to question', %q{
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
 
-    click_on 'add link'
-
-    within page.all('.nested-fields')[0] do
-      fill_in 'Link name', with: 'My url 1'
-      fill_in 'Url', with: url_1
-    end
+    fill_in 'Link name', with: 'My url 1'
+    fill_in 'Url', with: url_1
 
     click_on 'add link'
 
