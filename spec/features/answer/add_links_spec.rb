@@ -9,6 +9,7 @@ feature 'User can add linkes to answer', %q{
   given!(:question) { create(:question, user: user) }
   given(:url_1) { 'https://url_1.com' }
   given(:url_2) { 'https://url_2.com' }
+  given(:invalid_url) { 'invalid_url' }
 
   describe 'Add links to neew question'
     background do
@@ -48,5 +49,16 @@ feature 'User can add linkes to answer', %q{
       expect(page).to have_link 'My url 1', href: url_1
       expect(page).to have_link 'My url 2', href: url_2
     end 
+  end
+
+  scenario 'Invalid link for answer', js: true do    
+    fill_in 'Body', with: 'answer answer answer'
+
+    fill_in 'Link name', with: 'My url 1'
+    fill_in 'Url', with: invalid_url
+
+    click_on 'Answer'
+
+    expect(page).to have_content 'Links url is invalid'
   end
 end
