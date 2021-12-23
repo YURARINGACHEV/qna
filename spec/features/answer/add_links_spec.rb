@@ -11,54 +11,80 @@ feature 'User can add linkes to answer', %q{
   given(:url_2) { 'https://url_2.com' }
   given(:invalid_url) { 'invalid_url' }
 
-  describe 'Add links to neew question'
+  describe 'Add links to neew question' do
     background do
       sign_in(user)
       visit question_path(question)
     end
 
-	scenario 'User add link when given an answer', js: true do    
-    fill_in 'Body', with: 'answer answer answer'
+	  scenario 'User add link when given an answer', js: true do    
+      fill_in 'Body', with: 'answer answer answer'
 
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: url_1
+      click_on 'add link'
 
-    click_on 'Answer'
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: url_1
 
-    within '.answers' do
-      expect(page).to have_link 'My url 1', href: url_1
-    end  
-  end
+      click_on 'Answer'
 
-  scenario 'User add many links when given an answer', js: true do
-    fill_in 'Body', with: 'answer answer answer'
-
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: url_1
-
-    click_on 'add link'
-
-    within page.all('.nested-fields')[1] do
-      fill_in 'Link name', with: 'My url 2'
-      fill_in 'Url', with: url_2
+      within '.answers' do
+        expect(page).to have_link 'My url 1', href: url_1
+      end  
     end
 
-    click_on 'Answer'
+    scenario 'User add many links when given an answer', js: true do
+      fill_in 'Body', with: 'answer answer answer'
 
-    within '.answers' do
+      click_on 'add link'
+
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: url_1
+
+      click_on 'add link'
+
+      within page.all('.nested-fields')[1] do
+        fill_in 'Link name', with: 'My url 2'
+        fill_in 'Url', with: url_2
+      end
+
+      click_on 'Answer'
+
+      within '.answers' do
+        expect(page).to have_link 'My url 1', href: url_1
+        expect(page).to have_link 'My url 2', href: url_2
+      end 
+    end
+
+    scenario 'Invalid link for answer', js: true do    
+      fill_in 'Body', with: 'answer answer answer'
+
+      click_on 'add link'
+
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: invalid_url
+
+      click_on 'Answer'
+
+      expect(page).to have_content 'Links url is invalid'
+    end
+  
+    scenario 'The author of the auhtor, when editing it, can new links', js: true do
+      fill_in 'Body', with: 'answer answer answer'
+
+      click_on 'Answer'
+
+      within '.answer' do 
+        click_on 'Edit answer'
+
+        click_on 'add link'
+
+        fill_in 'Link name', with: 'My url 1'
+        fill_in 'Url', with: url_1
+
+        click_on 'Save'
+      end
+    
       expect(page).to have_link 'My url 1', href: url_1
-      expect(page).to have_link 'My url 2', href: url_2
-    end 
-  end
-
-  scenario 'Invalid link for answer', js: true do    
-    fill_in 'Body', with: 'answer answer answer'
-
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: invalid_url
-
-    click_on 'Answer'
-
-    expect(page).to have_content 'Links url is invalid'
+    end
   end
 end

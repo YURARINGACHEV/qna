@@ -9,55 +9,80 @@ feature 'User can add linkes to question', %q{
   given(:url_1) { 'https://url_1.com' }
   given(:url_2) { 'https://url_2.com' }
   given(:invalid_url) { 'invalid_url' }
+  given(:question) { create(:question, user: user) }
 
-  describe 'Add links to neew question'
+  describe 'Add links to neew question' do
     background do
       sign_in(user)
       visit new_question_path
     end
 
+    scenario 'User add link when asks question', js: true do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
 
-  scenario 'User add link when asks question' do
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
+      click_on 'add link'
 
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: url_1
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: url_1
 
-    click_on 'Ask'
+      click_on 'Ask'
 
-    expect(page).to have_link 'My url 1', href: url_1
-  end
-
-  scenario 'User add many links when asks question', js: true do
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
-
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: url_1
-
-    click_on 'add link'
-
-    within page.all('.nested-fields')[1] do
-      fill_in 'Link name', with: 'My url 2'
-      fill_in 'Url', with: url_2
+      expect(page).to have_link 'My url 1', href: url_1
     end
 
-    click_on 'Ask'
+    scenario 'User add many links when asks question', js: true do
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
 
-    expect(page).to have_link 'My url 1', href: url_1
-    expect(page).to have_link 'My url 2', href: url_2
+      click_on 'add link'
+
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: url_1
+
+      click_on 'add link'
+
+      within page.all('.nested-fields')[1] do
+        fill_in 'Link name', with: 'My url 2'
+        fill_in 'Url', with: url_2
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_link 'My url 1', href: url_1
+      expect(page).to have_link 'My url 2', href: url_2
+    end
+
+    scenario 'Invalid link for question', js: true do    
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+
+      click_on 'add link'
+
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: invalid_url
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'Links url is invalid'
+    end
   end
+  
+  scenario 'The author of the question, when editing it, can new links', js: true do
+    sign_in(user)
+    visit question_path(question)
 
-  scenario 'Invalid link for question', js: true do    
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
+    within '.question' do 
+      click_on 'Edit question'
 
-    fill_in 'Link name', with: 'My url 1'
-    fill_in 'Url', with: invalid_url
+      click_on 'add link'
 
-    click_on 'Ask'
+      fill_in 'Link name', with: 'My url 1'
+      fill_in 'Url', with: url_1
 
-    expect(page).to have_content 'Links url is invalid'
+      click_on 'Save question'
+    end
+    
+    expect(page).to have_link 'My url 1', href: url_1
   end
 end

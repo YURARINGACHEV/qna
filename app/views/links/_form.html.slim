@@ -1,4 +1,4 @@
 = f.fields_for :links do |link|
-  = render 'links/link_fields', f: link
-.add_links
+  .link data-link-id=link.object.id
+.links
   = link_to_add_association 'add link', f, :links, partial: 'links/link_fields'

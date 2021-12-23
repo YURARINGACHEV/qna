@@ -7,11 +7,13 @@
           p = link_to file.filename.to_s, url_for(file)
           - if current_user&.author?(answer)
             p = link_to "Delete file", attachment_path(file), method: :delete, remote:true
-    .links
-      p Links:
-      ul
-        - @answer.links.each do |link|
-          li= link_to link.name, link.url
+
+    - if answer.links.present?
+      .links
+        p Links:
+        ul
+          - @answer.links.each do |link|
+            = render link
 
     - if user_signed_in? 
       - if current_user&.author?(answer)
@@ -35,5 +37,7 @@
           p
             = f.label :files
             = f.file_field :files, multiple: true, direct_upload: true
+          p
+            = render 'links/form', f: f
           p  = f.submit 'Save'
   
