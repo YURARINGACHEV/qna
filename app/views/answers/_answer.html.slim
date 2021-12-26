@@ -12,7 +12,7 @@
       .links
         p Links:
         ul
-          - @answer.links.each do |link|
+          - answer.links.each do |link|
             = render link
 
     - if user_signed_in? 
