@@ -5,7 +5,6 @@
 	  	.row 
           =link.name
           .gist data-gist-id=link.id
-        span data-gist-id=link.id
         javascript:
           gistClient.setToken("#{ENV['GITHUB_TOKEN']}")
           gistClient.setToken("#{link.gist_id}")

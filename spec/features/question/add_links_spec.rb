@@ -55,10 +55,11 @@ feature 'User can add linkes to question', %q{
     end
 
     scenario 'User add link to gist when asks question', js: true do
-  
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
   
+      click_on 'add link'
+
       fill_in 'Link name', with: 'gist'
       fill_in 'Url', with: gist_url
   
