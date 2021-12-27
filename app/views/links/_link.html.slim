@@ -1,7 +1,26 @@
 -if link.linkable.links
 	li data-link-id=link.id
-	  = link_to link.name, link.url
+	  
+	  - if link.gist?
+	  	.row 
+          =link.name
+          .gist data-gist-id=link.id
+        span data-gist-id=link.id
+        javascript:
+          gistClient.setToken("#{ENV['GITHUB_TOKEN']}")
+          gistClient.setToken("#{link.gist_id}")
+          .then(response => {
+              Object.keys(response.files).forEach(file => {
+                let current = document.querySelector('.gist[data-gist-id="#{link.id}"]')
+                current.innerText = response.files[file].content
+              })
+          }).catch(err => {
+            console.log(err)
+          })
       
+      -else
+        = link_to link.name, link.url
+
       - if current_user&.author?(link.linkable)
       	p
   	      = link_to 'delete link', link_path(link), method: :delete, remote: true

@@ -9,6 +9,7 @@ feature 'User can add linkes to question', %q{
   given(:url_1) { 'https://url_1.com' }
   given(:url_2) { 'https://url_2.com' }
   given(:invalid_url) { 'invalid_url' }
+  given(:gist_url) { 'https://gist.github.com/YURARINGACHEV/55a64b5b7480c90803dedd9cf586e8ac' }
   given(:question) { create(:question, user: user) }
 
   describe 'Add links to neew question' do
@@ -51,6 +52,19 @@ feature 'User can add linkes to question', %q{
 
       expect(page).to have_link 'My url 1', href: url_1
       expect(page).to have_link 'My url 2', href: url_2
+    end
+
+    scenario 'User add link to gist when asks question', js: true do
+  
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+  
+      fill_in 'Link name', with: 'gist'
+      fill_in 'Url', with: gist_url
+  
+      click_on 'Ask'
+  
+      expect(page).to_not have_link 'gist', href: gist_url
     end
 
     scenario 'Invalid link for question', js: true do    
