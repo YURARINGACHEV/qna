@@ -1,0 +1,9 @@
+b Rewards:
+- if !@rewards.empty?
+  - @rewards.each do |reward|
+    p= "Question: #{reward.question.title}"
+    p= "Reward: #{reward.title}"
+    - if reward.image.attached?
+      p= image_tag reward.image, size: "100x100"
+- else
+  p= "you have no rewards"

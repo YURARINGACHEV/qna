@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :reward do
-    title { "MyString" }
+    title { "reward" }
+    association :question, factory: :question
   end
 end
