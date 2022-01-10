@@ -1,6 +1,8 @@
 .question data-question-id="#{question.id}"
   h1= question.title
   p=  question.body
+  
+  = render 'votes/vote', resource: question 
 
   - if question.files.attached?
     - question.files.each do |file|
