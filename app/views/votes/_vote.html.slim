@@ -1,10 +1,12 @@
-.vote-score
-  p resource.votes.raiting
-.voit-up
-  = link_to "vote up"
+- if current_user && !current_user.author?(resource)
+  .vote-score
+    p resource.votes.raiting
+  
+  .voit-up
+    = link_to "vote up"
 
-.voit-down
-  = link_to "vote down"
+  .voit-down
+    = link_to "vote down"
 
-.unvote
-  = link_to "unvote"
+  .unvote
+    = link_to "unvote"
