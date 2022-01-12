@@ -1,12 +1,25 @@
 - if current_user && !current_user.author?(resource)
-  .vote-score
-    p resource.votes.raiting
-  
-  .voit-up
-    = link_to "vote up"
+	div
+    
+    p = link_to "vote up", polymorphic_path(resource, action: :vote_up),
+                           method: :post,
+                           data: { type: :json },
+                           class: 'btn-vote',
+                           remote: true
 
-  .voit-down
-    = link_to "vote down"
+    
+    p = link_to "vote down", polymorphic_path(resource, action: :vote_down),
+                             method: :post,
+                             data: { type: :json },
+                             class: 'btn-vote',
+                             remote: true
 
-  .unvote
-    = link_to "unvote"
+    
+    p = link_to "unvote", polymorphic_path(resource, action: :unvote),
+                          method: :delete,
+                          data: { type: :json },
+                          class: 'btn-vote',
+                          remote: true
+
+    .vote-score data-vote-id='#{resource.class.name.underscore}- #{resource.id}'
+      p = resource.rating

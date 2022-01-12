@@ -1,4 +1,5 @@
 - if answer.persisted?
+  = render 'votes/vote', resource: answer
   .answer data-answer-form-id="#{answer.id}"
     p= answer.body
     - if answer.files.attached?
