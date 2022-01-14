@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  it_behaves_like 'voted'
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:answer) { create(:answer, question: question, user: user) }
+
+  it_behaves_like 'voted'
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3, user: user) } # задавать начальные данные.

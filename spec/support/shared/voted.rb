@@ -3,14 +3,17 @@ require 'rails_helper'
 shared_examples_for 'voted' do
 
   let(:user) { create(:user) }
-  let(:model) { create(described_class.controller_name.classify.underscore.to_sym, user: user) }
+  let(:model) { create(described_class.controller_name.classify.underscore.to_sym) }
 
   describe "POST #vote" do
     context "Not author" do
       before { login(user) }
 
       it 'user can vote up for resource' do
-        expect { post :vote_up, params: { id: model.id } }.to change(model.votes, :count).by(1)
+        # expect { post :vote_up, params: { id: model.id } }.to change(model.votes.count).by(1)
+        expect(model.votes.count).to eq 0 
+        post :vote_up, params: { id: model.id }
+        expect(model.votes.count).to eq 1
         expect(model.rating).to eq 1
       end
 
@@ -34,7 +37,8 @@ shared_examples_for 'voted' do
     end
 
     context "Author" do
-      before { sign_in(user) }
+      before { login(user) }
+      let(:model) { create(described_class.controller_name.classify.underscore.to_sym, user: user) }
 
       it 'author cant vote up for model' do
         default_rating = model.rating

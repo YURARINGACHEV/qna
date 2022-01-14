@@ -12,13 +12,13 @@ import "channels"
 import 'jquery'
 import "channels"
 import '@nathanvda/cocoon'
-const GistClient = require("gist-client")
-const gistClient = new GistClient()
+// const GistClient = require("gist-client")
+// const gistClient = new GistClient()
 import "./answers"
 import "./questions"
 import "./votes"
 
-window.gistClient = gistClient;
+// window.gistClient = gistClient;
 
 Rails.start()
 Turbolinks.start()

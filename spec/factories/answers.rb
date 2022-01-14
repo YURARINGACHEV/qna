@@ -6,6 +6,7 @@ FactoryBot.define do
   factory :answer do
     body
     question
+    user
 
     trait :answer_files do
       after(:build) do |answer|

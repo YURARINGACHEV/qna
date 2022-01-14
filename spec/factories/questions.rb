@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :question do
     title { 'Title' }
     body { 'MyText' }
+    user 
 
     trait :question_files do
       after(:build) do |question|
