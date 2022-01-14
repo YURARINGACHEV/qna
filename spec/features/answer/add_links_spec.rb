@@ -27,7 +27,7 @@ feature 'User can add linkes to answer', %q{
 
       click_on 'Answer'
 
-      within '.answers' do
+      within 'li' do
         expect(page).to have_link 'My url 1', href: url_1
       end  
     end
