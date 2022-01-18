@@ -54,4 +54,27 @@ feature 'User can create answer', '
     
     expect(page).to_not have_link "Answer."
   end
+
+  describe 'multiple session', js: true do
+    scenario 'User create answer his can showed other user' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+  
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'answer answer answer'
+        click_on 'Answer'
+  
+        expect(page).to have_content 'answer answer answer'
+      end
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'answer answer answer'
+      end
+    end
+  end
 end

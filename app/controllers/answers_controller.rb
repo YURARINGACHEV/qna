@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, only: [:create, :destroy]
   before_action :find_question, only: [:create]
   before_action :find_answer, only: [:update, :mark_as_best, :destroy]
+  after_action :publish_answer, only: %i[create]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -28,6 +29,19 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    return if @answer.errors.any?
+    ActionCable.server.broadcast(
+      "questions/#{params[:question_id]}/answers",
+      {
+        partial: ApplicationController.render(
+          partial: 'answers/answer',
+          locals: { answer: @answer, current_user: current_user }
+        )
+      }
+    )
+  end
 
   def find_question
     @question = Question.find(params[:question_id])
