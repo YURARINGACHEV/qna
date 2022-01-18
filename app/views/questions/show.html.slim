@@ -1,5 +1,5 @@
 .questions
-  = render @question  
+  = render 'question_block', resource: @question
 
 - if user_signed_in?
   = render 'answers/form'

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'Use can create question', '
-	In oreder to get answer from community
+	In oreder to get question
 	As an anuthenticated user
 	I`d like to be able to ask the question
 ' do
@@ -47,8 +47,34 @@ feature 'Use can create question', '
 
   scenario 'Unanuthenticated user tries to  asks a question' do
     visit questions_path
-    click_on 'Ask question'
+    click_on 'Ask'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
+
+  describe 'multiple session', js: true do
+    scenario 'User create question his can showed other user' do
+      Capybara.using_session('user') do
+        sign_in(user)
+        visit questions_path
+      end
+      Capybara.using_session('guest') do
+        visit questions_path
+      end
+  
+      Capybara.using_session('user') do
+        click_on 'Ask question'
+        fill_in 'Title', with: 'Test question'
+        fill_in 'Body', with: 'text text text'
+        click_on 'Ask'
+    
+        expect(page).to have_content 'Test question'
+        expect(page).to have_content 'text text text'
+      end
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Test question'
+        expect(page).to have_content 'text text text'
+      end
+    end
   end
 end
