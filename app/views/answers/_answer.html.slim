@@ -16,6 +16,13 @@
           - answer.links.each do |link|
             = render link, current_user: current_user
 
+    h3 Comments on the answer:
+    .answer-comment data-comment-answer=answer.id
+      = render answer.comments
+    - if current_user.present?
+      .comments-form 
+        = render 'comments/form', resource: answer
+
 
     - if current_user&.author?(answer)
       = link_to "Edit answer", '#', class: 'edit-answer-link', data: { answer_id: answer.id }

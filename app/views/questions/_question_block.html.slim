@@ -18,6 +18,13 @@
         - @question.links.each do |link|
           = render link, current_user: current_user
 
+  h3 Comments on the question:
+  .question-comment data-comment-question=@question.id
+    = render @question.comments
+  - if current_user.present?
+    .comments-form 
+      = render 'comments/form', resource: @question
+
   - if current_user&.author?(@question)
     .question-errors
     = link_to "Edit question", '#', class: 'edit-question-link', data: { question_id: @question.id }

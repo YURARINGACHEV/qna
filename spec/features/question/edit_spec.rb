@@ -18,6 +18,7 @@ feature 'User can edit his question', %{
 
         click_on 'Edit question'
       end
+      
       scenario 'edits his question', js: true do
         within '.question' do 
           fill_in "Title question", with: 'edited question title'
@@ -28,7 +29,7 @@ feature 'User can edit his question', %{
           expect(page).to_not have_content question.body
           expect(page).to have_content 'edited question title'
           expect(page).to have_content 'edited question body'
-          expect(page).to_not have_selector 'textarea'
+          expect(page).to_not have_selector 'textarea#question_body'
         end
       end
 
