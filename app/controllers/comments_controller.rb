@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
   def publish_comment
     return if @comment.errors.any?
 
-    id = @comment.commentable_type.to_sym == :Answer ? @comment.commentable.question.id : @comment.commentable.id
+    id = @comment.commentable_type.to_sym == :Answer ? @comment.commentable.question_id : @comment.commentable.id
     ActionCable.server.broadcast( 
       "comments-#{id}", {
         partial: ApplicationController.render( partial: 'comments/comment', locals: { comment: @comment, current_user: nil }),
