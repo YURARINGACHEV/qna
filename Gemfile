@@ -35,6 +35,9 @@ gem 'cocoon'
 gem 'devise'
 gem 'gon'
 gem "image_processing", ">= 1.2"
+gem 'omniauth'
+gem 'omniauth-github'
+gem 'omniauth-rails_csrf_protection'
 gem 'slim-rails'
 
 group :development, :test do
