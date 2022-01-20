@@ -33,7 +33,7 @@ Rails.application.configure do
   config.action_dispatch.show_exceptions = false
   
   config.action_mailer.default_url_options = { host: 'qna.test' }
-  Rails.application.routes.default_url_options[:host] = '0.0.0.0:3001'
+  Rails.application.routes.default_url_options[:host] = '0.0.0.0:300'
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
@@ -47,6 +47,8 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3002 }
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
