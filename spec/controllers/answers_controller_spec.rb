@@ -37,6 +37,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let!(:answer) { create(:answer, question: question, user: user) }
+
+    before { login user }
+    
     context 'with valid attributes' do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
@@ -64,10 +68,22 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'POST #mark_as_best' do
-    it 'mark best answer' do
-      post :mark_as_best, params: { id: answer }, format: :js
+  describe '#mark_as_best', js: true do
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:reward) { create :reward, question: answer.question }
+
+    before do
+      login user
+      patch :mark_as_best, params: { id: answer }, format: :js
+      answer.reload
+    end
+
+    it 'makes the answer as best' do
       expect(assigns(:answer)).to be_best
+    end
+
+    it 'gives to answers author a reward' do
+      expect(answer.question.reward.user).to eq answer.user
     end
   end
 

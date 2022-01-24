@@ -1,9 +1,9 @@
 class QuestionsController < ApplicationController
-  include Voted
-
   before_action :authenticate_user!, except: [:index, :show] 
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
+  # before_action :load_question, only: [:show, :edit, :update, :destroy]
   after_action :publish_question, only: [:create]
+
+  include Voted
 
   authorize_resource
 
@@ -12,19 +12,20 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new
+    # @answer = Answer.new
+    @answer = question.answers.new
     @answer.links.new
 
     gon.push({
                current_user: current_user,
-               question_id: @question.id
+               question_id: question.id
              })
   end
 
   def new
-    @question = Question.new
-    @question.links.new # .build создать алиас new
-    @question.build_reward
+    # @question = Question.new
+    question.links.new # .build создать алиас new
+    question.build_reward
   end
 
   def edit
@@ -41,36 +42,49 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.update(question_params)
+    # question.update(question_params)
+    if current_user.author?(question)
+      question.update(question_params)
+      
+    end
+
+    @question = question
   end
 
   def destroy
-    # if current_user&.author?(@question)
-      @question.destroy
+    if current_user&.author?(question)
+      question.destroy
       redirect_to questions_path, notice: "Question deleted"
-    # else
-    #   redirect_to questions_path
-    # end
+    else
+      redirect_to questions_path
+    end
   end
 
   private
 
+  def question
+    @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new
+  end
+
+  helper_method :question
+
   def publish_question
-    return if @question.errors.any?
+    return if question.errors.any?
 
     ActionCable.server.broadcast(
       'questions', {
         partial: ApplicationController.render(
           partial: 'questions/question',
-          locals: { question: @question, current_user: current_user }
-        )
+          locals: { question: question, current_user: current_user }
+        ),
+        question: question
       }
     )
   end
 
-  def load_question
-    @question = Question.with_attached_files.find(params[:id])
-  end
+  # def load_question
+  #   @question = Question.with_attached_files.find(params[:id])
+  # end
 
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url], reward_attributes: [:title, :image])

@@ -22,13 +22,11 @@ class Ability
     guest_abilities
 
     can :create, [Question, Answer, Comment]
-    can [:update, :destroy], [Question, Answer, Comment], { user_id: @user.id }
+    can [:update, :destroy], [Question, Answer, Comment], { user_id: user.id }
 
     can :mark_as_best, Answer, question: { user_id: user.id }
     can :destroy, Link, linkable: { user_id: user.id }
-    can :destroy, ActiveStorage::Attachment do |attachment|
-      user.author?(attachment.record)
-    end
+    can :destroy, ActiveStorage::Attachment, record: { user_id: user.id }
 
     can [:vote_up, :vote_down, :unvote], [Question, Answer] do |vote|
       !user.author?(vote)
