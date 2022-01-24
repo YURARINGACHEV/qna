@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   before_action :find_answer, only: [:update, :mark_as_best, :destroy]
   after_action :publish_answer, only: %i[create]
 
+  authorize_resource
+
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user

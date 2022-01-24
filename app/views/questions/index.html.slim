@@ -1,4 +1,5 @@
-p= link_to 'Ask question', new_question_path
+-if can?(:creaete, Question)
+  p= link_to 'Ask question', new_question_path
 
 .questions-list
   - @questions.each do |q|
