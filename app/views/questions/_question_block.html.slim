@@ -8,7 +8,7 @@
     - @question.files.each do |file|
       .question_file data-file-id="#{file.id}"
         p = link_to file.filename.to_s, url_for(file)
-        - if current_user&.author?(@question)
+        - if can?(:destroy, @question)
           p = link_to "Delete file", attachment_path(file), method: :delete, remote:true
 
   - if @question.links.present?
@@ -25,7 +25,7 @@
     .comments-form 
       = render 'comments/form', resource: @question
 
-  - if current_user&.author?(@question)
+  - if can?(:destroy, @question)
     .question-errors
     = link_to "Edit question", '#', class: 'edit-question-link', data: { question_id: @question.id }
     br
