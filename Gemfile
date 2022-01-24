@@ -31,10 +31,15 @@ gem 'bootsnap', '>= 1.4.4', require: false
 # gem 'jquery-rails'
 gem 'aws-sdk-s3', require: false
 gem 'bootstrap', '~> 5.1.3'
+gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
 gem 'gon'
 gem "image_processing", ">= 1.2"
+gem 'omniauth'
+gem 'omniauth-github'
+gem 'omniauth-vkontakte'
+gem 'omniauth-rails_csrf_protection'
 gem 'slim-rails'
 
 group :development, :test do
@@ -43,6 +48,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   gem 'factory_bot_rails'
   gem 'dotenv-rails'
+  gem 'letter_opener'
 end
 
 group :development do
@@ -65,6 +71,7 @@ group :test do
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
   gem 'launchy'
+  gem 'capybara-email'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

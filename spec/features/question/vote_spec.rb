@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-feature 'User can vote for a question', %q{
+feature 'User can vote for a question', "
   In order to show that question is good
   As an authenticated user
   I'd like to be able to vote
-} do
-
+" do
   given(:author) { create(:user) }
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: author) }
-
 
   describe 'User is not an author of question', js: true do
     background do
@@ -18,7 +16,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'votes up for question' do
-      within ".question" do
+      within '.question' do
         click_on 'vote up'
 
         within '.vote-score' do
@@ -28,7 +26,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'you cannot vote multiple times' do
-      within ".question" do
+      within '.question' do
         click_on 'vote up'
         click_on 'vote up'
 
@@ -39,7 +37,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'unvote his vote' do
-      within ".question" do
+      within '.question' do
         click_on 'vote up'
         click_on 'unvote'
 
@@ -50,7 +48,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'votes down for question' do
-      within ".question" do
+      within '.question' do
         click_on 'vote down'
 
         within '.vote-score' do
@@ -60,7 +58,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'you can not vote multiple times' do
-      within ".question" do
+      within '.question' do
         click_on 'vote down'
         click_on 'vote down'
 
@@ -71,7 +69,7 @@ feature 'User can vote for a question', %q{
     end
 
     scenario 'can re-votes' do
-      within ".question" do
+      within '.question' do
         click_on 'vote up'
         click_on 'unvote'
         click_on 'vote down'
@@ -103,4 +101,4 @@ feature 'User can vote for a question', %q{
       expect(page).to_not have_content 'unvote'
     end
   end
-end 
+end

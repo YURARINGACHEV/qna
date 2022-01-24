@@ -9,7 +9,10 @@ RSpec.describe AnswersController, type: :controller do
     before { login(user) }
     context 'with valid attributes' do
       it 'Authenticated user save a new answer in the database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js }.to change(question.answers.where(user: user), :count).by(1)
+        expect do
+          post :create, params: { question_id: question, answer: attributes_for(:answer) },
+                        format: :js
+        end.to change(question.answers.where(user: user), :count).by(1)
       end
 
       it 'renders to show view' do
@@ -34,6 +37,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let!(:answer) { create(:answer, question: question, user: user) }
+
+    before { login user }
+    
     context 'with valid attributes' do
       it 'changes answer attributes' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
@@ -49,7 +56,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
-        expect do 
+        expect do
           patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         end.to_not change(answer, :body)
       end
@@ -58,13 +65,25 @@ RSpec.describe AnswersController, type: :controller do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
       end
-    end 
+    end
   end
 
-  describe 'POST #mark_as_best' do
-    it 'mark best answer' do
-     post :mark_as_best, params: { id: answer }, format: :js
-     expect(assigns(:answer)).to be_best
+  describe '#mark_as_best', js: true do
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:reward) { create :reward, question: answer.question }
+
+    before do
+      login user
+      patch :mark_as_best, params: { id: answer }, format: :js
+      answer.reload
+    end
+
+    it 'makes the answer as best' do
+      expect(assigns(:answer)).to be_best
+    end
+
+    it 'gives to answers author a reward' do
+      expect(answer.question.reward.user).to eq answer.user
     end
   end
 

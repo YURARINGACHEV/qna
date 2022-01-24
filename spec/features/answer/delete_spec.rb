@@ -5,7 +5,6 @@ feature 'User can delete own answer', '
   As  Authenticated User
   I`d like to be able to delete own question
 ' do
-
   given(:bad_user) { create(:user) }
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
@@ -19,7 +18,7 @@ feature 'User can delete own answer', '
 
     expect(page).to have_content answer.body
 
-    page.accept_confirm  do
+    page.accept_confirm do
       click_on 'Delete answer'
     end
 
@@ -45,7 +44,7 @@ feature 'User can delete own answer', '
     end
 
     expect(page).to have_link 'rails_helper.rb'
-    click_on "Delete file"
+    click_on 'Delete file'
     expect(page).to_not have_link 'rails_helper.rb'
   end
 

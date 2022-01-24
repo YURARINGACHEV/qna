@@ -1,0 +1,35 @@
+= render 'votes/vote', resource: answer
+.answer data-answer-form-id="#{answer.id}"
+  p= answer.body
+  - if answer.files.attached?
+    - answer.files.each do |file|
+      .file data-file-id="#{file.id}"
+        p = link_to file.filename.to_s, url_for(file)
+        - if can?(:destroy, answer)
+          p = link_to "Delete file", attachment_path(file), method: :delete, remote:true
+
+  - if answer.links.present?
+    .links
+      p Links:
+      ul
+        - answer.links.each do |link|
+          = render link
+
+  h3 Comments on the answer:
+  .answer-comment data-comment-answer=answer.id
+    = render answer.comments
+  - if current_user.present?
+    .comments-form 
+      = render 'comments/form', resource: answer
+
+  - if current_user&.author?(answer)
+    = link_to "Edit answer", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+
+    = link_to "Delete answer", answer,
+                          method: :delete,
+                          data: { confirm: 'Are you sure?' },
+                          remote: true
+    -if answer.best
+      p 'It is the best answer'
+    - else
+      = link_to "Mark as best", mark_as_best_answer_path(answer),  method: :post, remote: true

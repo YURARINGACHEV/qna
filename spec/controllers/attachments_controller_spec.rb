@@ -8,10 +8,12 @@ RSpec.describe AttachmentsController, type: :controller do
 
   describe 'DELETE #delete_file' do
     before { login(user) }
-    describe "Answer file" do
+    describe 'Answer file' do
       context 'User tries to delete file on his answer' do
         it 'deletes the file' do
-          expect { delete :destroy, params: { id: answer_files.files.first }, format: :js }.to change(answer_files.files, :count).by(-1)
+          expect do
+            delete :destroy, params: { id: answer_files.files.first }, format: :js
+          end.to change(answer_files.files, :count).by(-1)
         end
 
         it 'redirects to destroy' do
@@ -21,10 +23,12 @@ RSpec.describe AttachmentsController, type: :controller do
       end
 
       context 'Authorized other user' do
-    	  before { login(ohter_user) }
+        before { login(ohter_user) }
 
         it 'tries to delete file nswer' do
-          expect { delete :destroy, params: { id: answer_files.files.first }, format: :js }.to_not change(answer_files.files, :count)
+          expect do
+            delete :destroy, params: { id: answer_files.files.first }, format: :js
+          end.to_not change(answer_files.files, :count)
         end
 
         it 'redirects the destroy' do
@@ -34,10 +38,13 @@ RSpec.describe AttachmentsController, type: :controller do
       end
     end
 
-    describe "Question file" do
+    describe 'Question file' do
       context 'User tries to delete file on his question' do
         it 'deletes the file' do
-          expect { delete :destroy, params: { id: question_files.files.first }, format: :js }.to change(question_files.files, :count).by(-1)
+          expect do
+            delete :destroy, params: { id: question_files.files.first },
+                             format: :js
+          end.to change(question_files.files, :count).by(-1)
         end
 
         it 'redirects to destroy' do
@@ -50,7 +57,9 @@ RSpec.describe AttachmentsController, type: :controller do
         before { login(ohter_user) }
 
         it 'tries to delete ' do
-          expect { delete :destroy, params: { id: question_files.files.first }, format: :js }.to_not change(question_files.files, :count)
+          expect do
+            delete :destroy, params: { id: question_files.files.first }, format: :js
+          end.to_not change(question_files.files, :count)
         end
 
         it 'redirects the destroy' do

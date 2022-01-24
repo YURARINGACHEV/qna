@@ -15,7 +15,9 @@ feature 'Use can sign in', '
     fill_in 'Password confirmation', with: '12345678'
     click_on 'Sign up'
 
-    expect(page).to have_content 'Welcome! You have signed up successfully.'
+    open_email('user@test.ru')
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content 'Your email address has been successfully confirmed.'
   end
 
   scenario 'Unregistered user tries to sign in' do
