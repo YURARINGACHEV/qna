@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-feature 'User can add linkes to question', %q{
+feature 'User can add linkes to question', '
   In order to provide additional info to my question
   As an question`s author
   I`d like to be able to add links
-} do
+' do
   given(:user) { create(:user) }
   given(:url_1) { 'https://url_1.com' }
   given(:url_2) { 'https://url_2.com' }
@@ -57,18 +57,18 @@ feature 'User can add linkes to question', %q{
     scenario 'User add link to gist when asks question', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
-  
+
       click_on 'add link'
 
       fill_in 'Link name', with: 'gist'
       fill_in 'Url', with: gist_url
-  
+
       click_on 'Ask'
-  
+
       expect(page).to_not have_link 'gist', href: gist_url
     end
 
-    scenario 'Invalid link for question', js: true do    
+    scenario 'Invalid link for question', js: true do
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
 
@@ -82,12 +82,12 @@ feature 'User can add linkes to question', %q{
       expect(page).to have_content 'Links url is invalid'
     end
   end
-  
+
   scenario 'The author of the question, when editing it, can new links', js: true do
     sign_in(user)
     visit question_path(question)
 
-    within '.question' do 
+    within '.question' do
       click_on 'Edit question'
 
       click_on 'add link'
@@ -97,7 +97,7 @@ feature 'User can add linkes to question', %q{
 
       click_on 'Save question'
     end
-    
+
     expect(page).to have_link 'My url 1', href: url_1
   end
 
@@ -114,7 +114,7 @@ feature 'User can add linkes to question', %q{
     fill_in 'Url', with: url_1
 
     click_on 'Ask'
-    
+
     click_on 'delete link'
 
     expect(page).to_not have_link 'My url 1', href: url_1

@@ -11,15 +11,15 @@ feature 'User can create answer', '
   describe 'Authenticated user' do
     background do
       sign_in(user)
- 
+
       visit question_path(question)
     end
 
-    describe 'answer' do 
-      background do 
+    describe 'answer' do
+      background do
         fill_in 'Body', with: 'answer answer answer'
       end
-      
+
       scenario 'answer to the question', js: true do
         fill_in 'Body', with: 'answer answer answer'
         click_on 'Answer'
@@ -31,11 +31,11 @@ feature 'User can create answer', '
         end
       end
 
-      scenario 'answer to the question with attached files', js: true do      
+      scenario 'answer to the question with attached files', js: true do
         attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Answer'
-      
-        within '.answers' do 
+
+        within '.answers' do
           expect(page).to have_link 'rails_helper.rb'
           expect(page).to have_link 'spec_helper.rb'
         end
@@ -51,8 +51,8 @@ feature 'User can create answer', '
 
   scenario 'Unanuthenticated user tries  answer to the question' do
     visit question_path(question)
-    
-    expect(page).to_not have_link "Answer."
+
+    expect(page).to_not have_link 'Answer.'
   end
 
   describe 'multiple session', js: true do
@@ -65,11 +65,11 @@ feature 'User can create answer', '
       Capybara.using_session('guest') do
         visit question_path(question)
       end
-  
+
       Capybara.using_session('user') do
         fill_in 'Body', with: 'answer answer answer'
         click_on 'Answer'
-  
+
         expect(page).to have_content 'answer answer answer'
       end
       Capybara.using_session('guest') do

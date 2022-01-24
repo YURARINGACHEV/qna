@@ -32,7 +32,7 @@ feature 'User can delete own question', '
     end
 
     expect(page).to have_link 'rails_helper.rb'
-    click_on "Delete file"
+    click_on 'Delete file'
     expect(page).to_not have_link 'rails_helper.rb'
   end
 

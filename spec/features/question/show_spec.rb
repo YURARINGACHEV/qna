@@ -16,7 +16,7 @@ feature 'User can view the question and the answers to it', "
 
     expect(page).to have_content question.title
     expect(page).to have_content question.body
-    
+
     answers.each do |answer|
       expect(page).to have_content answer.body
     end
@@ -27,7 +27,7 @@ feature 'User can view the question and the answers to it', "
 
     expect(page).to have_content question.title
     expect(page).to have_content question.body
-    
+
     answers.each do |answer|
       expect(page).to have_content answer.body
     end

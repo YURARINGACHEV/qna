@@ -32,7 +32,7 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns the requested question to @question' do
       expect(assigns(:question)).to eq question # eq - проверка на эквивалент
     end
-    
+
     it 'assigns new link for aswer' do
       expect(assigns(:answer).links.first).to be_a_new(Link) # eq - проверка на эквивалент
     end

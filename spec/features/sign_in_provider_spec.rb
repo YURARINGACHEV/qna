@@ -1,12 +1,11 @@
 require 'rails_helper'
 
-feature 'Authorization from providers', %q{
+feature 'Authorization from providers', '
   In order to have access to app
   As a user
   I want to be able to sign in with my social network accounts
-} do
-
-  given!(:user) { create(:user, email: 'test@test.com')}
+' do
+  given!(:user) { create(:user, email: 'test@test.com') }
   background { visit new_user_session_path }
 
   describe 'Sign in with GitHub' do

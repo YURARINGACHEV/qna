@@ -12,12 +12,12 @@ feature 'User can view a list of questions', '
 
   scenario 'Authenticated user can view a list of questions' do
     sign_in(user)
-    expect(page).to have_content("Title", count: 3)
-    expect(page).to have_content("MyText", count: 3)
+    expect(page).to have_content('Title', count: 3)
+    expect(page).to have_content('MyText', count: 3)
   end
 
   scenario 'Unauthenticated user can view a list of questions' do
-    expect(page).to have_content("Title", count: 3)
-    expect(page).to have_content("MyText", count: 3)
+    expect(page).to have_content('Title', count: 3)
+    expect(page).to have_content('MyText', count: 3)
   end
 end

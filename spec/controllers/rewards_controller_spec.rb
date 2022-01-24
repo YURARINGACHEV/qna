@@ -13,7 +13,7 @@ RSpec.describe RewardsController, type: :controller do
       expect(response).to render_template :index
     end
 
-    it 'user has reward' do 
+    it 'user has reward' do
       expect(assigns(:rewards)).to eq([reward])
     end
   end

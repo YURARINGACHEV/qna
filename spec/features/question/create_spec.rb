@@ -14,7 +14,7 @@ feature 'Use can create question', '
       visit questions_path
       click_on 'Ask question'
     end
- 
+
     describe 'asks' do
       background do
         fill_in 'Title', with: 'Test question'
@@ -37,7 +37,7 @@ feature 'Use can create question', '
         expect(page).to have_link 'spec_helper.rb'
       end
     end
-    
+
     scenario 'asks a question with errors' do
       click_on 'Ask'
 
@@ -61,13 +61,13 @@ feature 'Use can create question', '
       Capybara.using_session('guest') do
         visit questions_path
       end
-  
+
       Capybara.using_session('user') do
         click_on 'Ask question'
         fill_in 'Title', with: 'Test question'
         fill_in 'Body', with: 'text text text'
         click_on 'Ask'
-    
+
         expect(page).to have_content 'Test question'
         expect(page).to have_content 'text text text'
       end

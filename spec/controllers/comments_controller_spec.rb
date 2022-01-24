@@ -5,8 +5,12 @@ RSpec.describe CommentsController, type: :controller do
   let!(:question) { create(:question) }
   let!(:answer) { create(:answer) }
 
-  let(:create_question_comments) { post :create, params: { question_id: question.id, comment: attributes_for(:comment), format: :js } }
-  let(:create_answer_comments) { post :create, params: { answer_id: answer.id, comment: attributes_for(:comment), format: :js } }
+  let(:create_question_comments) do
+    post :create, params: { question_id: question.id, comment: attributes_for(:comment), format: :js }
+  end
+  let(:create_answer_comments) do
+    post :create, params: { answer_id: answer.id, comment: attributes_for(:comment), format: :js }
+  end
 
   describe 'POST #create' do
     describe 'with authenticated user' do

@@ -1,11 +1,10 @@
 require 'rails_helper'
 
-feature 'User can comment a question', %q{
+feature 'User can comment a question', "
   In order to get more information about question
   As an authenticated user
   I'd like to be able to comments
-} do
-
+" do
   given(:user) { create :user }
   given!(:question) { create :question, user: user }
 
@@ -58,4 +57,4 @@ feature 'User can comment a question', %q{
       end
     end
   end
-end 
+end

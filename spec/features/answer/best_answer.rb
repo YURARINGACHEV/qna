@@ -15,9 +15,9 @@ feature 'The author can choose the best answer', "
       visit question_path(answer.question)
 
       expect(page).not_to have_content 'It is the best answer'
-      
+
       click_on 'Mark as best'
-      
+
       expect(page).to have_content 'It is the best answer'
     end
 
