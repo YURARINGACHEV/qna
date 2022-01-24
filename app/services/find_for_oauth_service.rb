@@ -1,12 +1,12 @@
 class FindForOauthService
-	attr_reader :auth
+  attr_reader :auth
 
-	def initialize(auth)
-		@auth = auth
-	end
+  def initialize(auth)
+    @auth = auth
+  end
 
-	def call
-		authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+  def call
+    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
     return authorization.user if authorization
 
     email = auth.info[:email]
@@ -18,8 +18,8 @@ class FindForOauthService
       user = User.create!(email: email, password: password, password_confirmation: password, confirmed_at: Time.zone.now)
       user.create_authorization(auth)
     else
-    	user = User.new
+      user = User.new
     end
     user
-	end
+  end
 end
