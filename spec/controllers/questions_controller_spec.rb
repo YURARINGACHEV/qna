@@ -168,6 +168,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'redirects the index' do
+        login other_user 
         delete :destroy, params: { id: other_question }
         expect(response).to redirect_to questions_path
       end

@@ -1,6 +1,8 @@
-- if current_user && !current_user.author?(resource)
-	div
-    
+div
+  -if resource.present?
+    .vote-score data-vote-id='#{resource.class.name.underscore}-#{resource.id}'
+      p = resource.rating
+  - if current_user && !current_user.author?(resource)
     p = link_to "vote up", polymorphic_path(resource, action: :vote_up),
                            method: :post,
                            data: { type: :json },
@@ -21,5 +23,4 @@
                           class: 'btn-vote',
                           remote: true
 
-    .vote-score data-vote-id='#{resource.class.name.underscore}-#{resource.id}'
-      p = resource.rating
+    
