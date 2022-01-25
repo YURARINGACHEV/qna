@@ -2,13 +2,13 @@
   h1= @question.title
   p=  @question.body
   
-  = render 'votes/vote', resource: @question, current_user: current_user
+  = render 'votes/vote', resource: @question
 
   - if @question.files.attached?
     - @question.files.each do |file|
       .question_file data-file-id="#{file.id}"
         p = link_to file.filename.to_s, url_for(file)
-        - if current_user&.author?(@question)
+        - if can?(:destroy, @question)
           p = link_to "Delete file", attachment_path(file), method: :delete, remote:true
 
   - if @question.links.present?
@@ -16,7 +16,7 @@
       p Links:
       ul
         - @question.links.each do |link|
-          = render link, current_user: current_user
+          = render link
 
   h3 Comments on the question:
   .question-comment data-comment-question=@question.id

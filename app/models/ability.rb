@@ -29,7 +29,7 @@ class Ability
     can :destroy, ActiveStorage::Attachment, record: { user_id: user.id }
 
     can %i[vote_up vote_down unvote], [Question, Answer] do |resource|
-      not user.author?(resource)
+      !user.author?(resource)
     end
   end
 

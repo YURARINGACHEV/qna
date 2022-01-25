@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!, except: [:index, :show] 
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :load_question, only: %i[show edit update destroy]
   after_action :publish_question, only: [:create]
 
   authorize_resource
@@ -12,11 +12,10 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new
+    @answer =  @question.answers.new
     @answer.links.new
-
     gon.push({
-               current_user: current_user,
+               current_user_id: current_user&.id,
                question_id: @question.id
              })
   end
@@ -27,8 +26,7 @@ class QuestionsController < ApplicationController
     @question.build_reward
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @question = current_user.questions.new(question_params)
@@ -36,7 +34,7 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
     else
-      render :new 
+      render :new
     end
   end
 
@@ -47,7 +45,7 @@ class QuestionsController < ApplicationController
   def destroy
     if current_user&.author?(@question)
       @question.destroy
-      redirect_to questions_path, notice: "Question deleted"
+      redirect_to questions_path, notice: 'Question deleted'
     else
       redirect_to questions_path
     end
@@ -73,6 +71,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url], reward_attributes: [:title, :image])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url],
+                                                    reward_attributes: %i[title image])
   end
 end

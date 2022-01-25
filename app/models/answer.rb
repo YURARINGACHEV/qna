@@ -1,6 +1,6 @@
 class Answer < ApplicationRecord
   include Votable
-  
+
   belongs_to :question
   belongs_to :user
   has_many :links, dependent: :destroy, as: :linkable
@@ -16,7 +16,7 @@ class Answer < ApplicationRecord
 
   def mark_as_best
     transaction do
-      self.class.where(question_id: self.question_id).update_all(best: false)
+      self.class.where(question_id: question_id).update_all(best: false)
       update(best: true)
       question.reward&.update!(user: user)
     end

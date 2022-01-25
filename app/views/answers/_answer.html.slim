@@ -1,12 +1,14 @@
 - if answer.persisted?
-  = render 'votes/vote', resource: answer, current_user: current_user
+
+  = render 'votes/vote', resource: answer
+
   .answer data-answer-form-id="#{answer.id}"
     p= answer.body
     - if answer.files.attached?
       - answer.files.each do |file|
         .file data-file-id="#{file.id}"
           p = link_to file.filename.to_s, url_for(file)
-          - if current_user&.author?(answer)
+          - if can?(:destroy, answer)
             p = link_to "Delete file", attachment_path(file), method: :delete, remote:true
 
     - if answer.links.present?
@@ -14,7 +16,7 @@
         p Links:
         ul
           - answer.links.each do |link|
-            = render link, current_user: current_user
+            = render link
 
     h3 Comments on the answer:
     .answer-comment data-comment-answer=answer.id

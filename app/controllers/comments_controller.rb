@@ -1,4 +1,3 @@
-
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_commentable, only: :create
@@ -24,10 +23,14 @@ class CommentsController < ApplicationController
     return if @comment.errors.any?
 
     id = @comment.commentable_type.to_sym == :Answer ? @comment.commentable.question_id : @comment.commentable.id
-    ActionCable.server.broadcast( 
+    ActionCable.server.broadcast(
       "comments-#{id}", {
-        partial: ApplicationController.render( partial: 'comments/comment', locals: { comment: @comment, current_user: nil }),
+        partial: ApplicationController.render(partial: 'comments/comment',
+                                              locals: {
+                                                comment: @comment, current_user: nil
+                                              }),
         comment: @comment
-    })
+      }
+    )
   end
 end

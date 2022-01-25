@@ -1,6 +1,6 @@
 class Reward < ApplicationRecord
-	belongs_to :user, optional: true
-	belongs_to :question
+  belongs_to :user, optional: true
+  belongs_to :question
 
   validates :title, presence: true
 

@@ -5,6 +5,9 @@ consumer.subscriptions.create({ channel: "AnswersChannel", question_id: gon.ques
     this.perform('follow');
   },
   received(data) {
-    $('.answers').append(data.partial);
+    var answer = data.answer;
+      if (gon.current_user_id != answer.user_id) {
+        $('.answers').append(data.partial);
+    }
   },
 })

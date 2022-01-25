@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-describe Ability do 
+describe Ability do
   subject(:ability) { Ability.new(user) }
-  
-  describe 'for quest' do 
+
+  describe 'for quest' do
     let(:user) { nil }
 
     it { should be_able_to :read, Question }
@@ -20,11 +20,11 @@ describe Ability do
   end
 
   describe 'for user' do
-  	let(:user) { create :user }
-  	let(:other_user) { create :user }
+    let(:user) { create :user }
+    let(:other_user) { create :user }
 
-  	it { should_not be_able_to :manage, :all }
-  	it { should be_able_to :read, Question }
+    it { should_not be_able_to :manage, :all }
+    it { should be_able_to :read, Question }
 
     it { should be_able_to :create, Question }
     it { should be_able_to :create, Answer }
@@ -37,22 +37,3 @@ describe Ability do
     it { should_not be_able_to :update, create(:answer, user: other_user), user: user }
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
