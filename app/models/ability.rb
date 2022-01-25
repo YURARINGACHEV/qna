@@ -25,6 +25,8 @@ class Ability
     can :destroy, [Question, Answer, Comment], { user_id: user.id }
 
     can :mark_as_best, Answer, question: { user_id: user.id }
+    can :destroy, Link, linkable: { user_id: user.id }
+    can :destroy, ActiveStorage::Attachment, record: { user_id: user.id }
   end
 
   def guest_abilities
