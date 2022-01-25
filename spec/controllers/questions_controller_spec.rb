@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:question) { create(:question, user: user) }
   let(:answer) { create(:answer, question: question, user: user) }
 
@@ -145,13 +146,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) }
-
     let!(:question) { create(:question, user: user) }
-    let!(:other_user) { create(:user) }
-    let!(:other_question) { create(:question, user: other_user) }
+    # let(:other_question) { create(:question, user: other_user) }
 
     context 'Authorized user' do
+      before { login(user) }
       it 'deletes the question' do
         expect { delete :destroy, params: { id: question } }.to change(Question.where(user: user), :count).by(-1)
       end
@@ -164,12 +163,13 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'Authorized other user' do
       it 'deletes the question' do
-        expect { delete :destroy, params: { id: other_question } }.to_not change(Question, :count)
+        login other_user
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
       end
 
       it 'redirects the index' do
-        login other_user 
-        delete :destroy, params: { id: other_question }
+        login user
+        delete :destroy, params: { id: question }
         expect(response).to redirect_to questions_path
       end
     end
