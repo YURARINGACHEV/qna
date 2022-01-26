@@ -42,6 +42,7 @@ RSpec.configure do |config|
   config.include WaitForAjax, type: :feature
   config.include ActionDispatch::TestProcess
   config.include OmniauthMacros
+  config.include ApiHelpers, type: :request
 
   Capybara.javascript_driver = :selenium_chrome_headless
 

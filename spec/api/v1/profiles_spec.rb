@@ -26,16 +26,12 @@ describe 'Profiles Api', type: :request do
 		  end
 
 		  it 'returns all public fields' do
-        json = JSON.parse(response.body)
-
         %w[id email admin created_at updated_at].each do |attr|
           expect(json[attr]).to eq me.send(attr).as_json
         end
 		  end
 
 		  it 'does not return private fields' do
-        json = JSON.parse(response.body)
-
         %w[password encrypted_password].each do |attr|
           expect(json).to_not have_key(attr)
         end
