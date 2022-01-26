@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   devise_for :users, 
              controllers: { omniauth_callbacks: 'oauth_callbacks', confirmations: 'confirmations'  }, 
              path: :qna, path_names: { sign_in: :login, sign_out: :logout }
