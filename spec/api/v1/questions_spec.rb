@@ -55,4 +55,46 @@ describe 'Questions Api', type: :request do
 		  end
 		end
 	end
+
+
+  describe 'GET /api/v1/questions/:id' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, :question_files, user: user) }
+    let(:question_response) { json['question'] }
+    let!(:comments) { create_list(:comment, 2, commentable: question, user: user) }
+    let!(:links) { create_list(:link, 2, linkable: question) }
+    let(:access_token) { create(:access_token) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+    it_behaves_like 'Success requestable'
+
+    it 'return all public fields' do
+      %w[id title body created_at updated_at].each do |attr|
+        expect(question_response[attr]).to eq question.send(attr).as_json
+      end
+    end
+
+    describe 'comments' do
+      it_behaves_like 'Resource count returnable' do
+        let(:resource_response) { question_response['comments'] }
+        let(:resource) { comments }
+      end
+    end
+
+    describe 'links' do
+      it_behaves_like 'Resource count returnable' do
+        let(:resource_response) { question_response['links'] }
+        let(:resource) { links }
+      end
+    end
+
+    describe 'files' do
+      it_behaves_like 'Resource count returnable' do
+        let(:resource_response) { question_response['files'] }
+        let(:resource) { question.files }
+      end
+    end
+  end
 end
