@@ -3,18 +3,11 @@ require 'rails_helper'
 describe 'Profiles Api', type: :request do
 	let(:headers) { { "ACCEPT" => 'application/json' } }
 	
-	describe 'GET /api/v1/profiles/me' do 
-		context 'Unauthorized' do
-  		it 'renders401 status if there is access_token' do 
-	  		get '/api/v1/profiles/me', headers: headers
-		  	expect(response.status).to eq 401
-		  end
-
-		  it 'renders401 status if there is invalid' do 
-			  get '/api/v1/profiles/me', params: { access_token: '123' }, headers: headers
-			  expect(response.status).to eq 401
-		  end
-		end
+	describe 'GET /api/v1/profiles/me' do
+	  it_behaves_like 'API Authorizable' do 
+	  	let(:method) { :get }
+	  	let(:api_path) { '/api/v1/profiles/me' }
+	  end
 
 		context 'Authorized' do 
 			let(:me) { create(:user) }

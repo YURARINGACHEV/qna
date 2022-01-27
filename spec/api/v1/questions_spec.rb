@@ -4,17 +4,9 @@ describe 'Questions Api', type: :request do
 	let(:headers) { { "ACCEPT" => 'application/json' } }
   
   describe 'GET /api/v1/questions/me' do 
-		context 'Unauthorized' do
-  		it 'renders401 status if there is access_token' do 
-	  		get '/api/v1/questions', headers: headers
-		  	expect(response.status).to eq 401
-		  end
-
-		  it 'renders401 status if there is invalid' do 
-			  get '/api/v1/questions', params: { access_token: '123' }, headers: headers
-			  expect(response.status).to eq 401
-		  end
-		end
+  	let(:api_path) { '/api/v1/questions' }
+  	it_behaves_like 'API Authorizable' 
+  	let(:method) { :get }
 
     context 'Authorized' do 
 			let(:access_token) { create(:access_token) }
