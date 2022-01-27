@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'Profiles Api', type: :request do
 	let(:headers) { { "ACCEPT" => 'application/json' } }
+	
 	describe 'GET /api/v1/profiles/me' do 
 		context 'Unauthorized' do
   		it 'renders401 status if there is access_token' do 

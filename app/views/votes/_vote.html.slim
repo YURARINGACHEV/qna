@@ -1,5 +1,5 @@
 div
-  -if resource.present?
+  -if resource.present? && resource.rating !=0
     .vote-score data-vote-id='#{resource.class.name.underscore}-#{resource.id}'
       p = resource.rating
 
