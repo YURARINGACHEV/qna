@@ -19,6 +19,9 @@ describe 'Questions Api', type: :request do
     context 'Authorized' do 
 			let(:access_token) { create(:access_token) }
 			let!(:questions) { create_list(:question, 2) }
+			let(:question) { questions.first }
+			let(:question_response) { json.first }
+			let!(:answers) { create_list(:answer, 3, question: question) }
 
 			before { get '/api/v1/questions', params: { access_token: access_token.token }, headers: headers }
 
@@ -31,9 +34,24 @@ describe 'Questions Api', type: :request do
 		  end
 
 		  it 'returns all public fields' do
-		    %w[title body user_id created_at updated_at].each do |attr|
-          expect(json.first[attr]).to eq questions.first.send(attr).as_json
+		    %w[id title body user_id created_at updated_at].each do |attr|
+          expect(question_response[attr]).to eq question.send(attr).as_json
         end 
+		  end
+
+		  describe 'answers' do 
+		  	let(:answer) { answers.first }
+		  	let(:answer_response) { question_response['answers'].first }
+
+		  	it 'returns list ogf answers' do 
+		  	  expect(question_response['answers'].size).to eq 3
+		    end
+
+		    it 'returns all public fields' do
+		      %w[id body user_id created_at updated_at].each do |attr|
+            expect(answer_response[attr]).to eq answer.send(attr).as_json
+          end 
+		    end
 		  end
 		end
 	end
