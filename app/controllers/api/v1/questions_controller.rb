@@ -1,10 +1,8 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  # authorize_resource
-
-	def index
-		@questions = Question.all
-		render json: @questions
-	end
+  def index
+    @questions = Question.all
+    render json: @questions
+  end
 
   def create
     @question = current_resource_owner.questions.new(question_params)
@@ -16,8 +14,16 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     end
   end
 
-	def show
+  def show
     render json: question, serializer: QuestionSerializer
+  end
+
+  def update
+    if question.update(question_params)
+      render json: question
+    else
+      render json: { errors: question.errors }, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -30,7 +36,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   def question
     @question = Question.with_attached_files.find(params[:id])
   end
-  
+
   helper_method :question
 
   def question_params

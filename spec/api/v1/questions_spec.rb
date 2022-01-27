@@ -31,6 +31,17 @@ describe 'Questions Api', type: :request do
         end
       end
 
+      it_behaves_like 'Public fields returnable' do
+        let(:resource) { question }
+        let(:resource_response) { question_response }
+        let(:attrs) { %w[id title body created_at updated_at] }
+      end
+
+      it_behaves_like 'Resource count returnable' do
+        let(:resource_response) { json['questions'] }
+        let(:resource) { questions }
+      end
+
       it 'contains user object' do
         expect(question_response['user']['id']).to eq question.user.id
       end
@@ -43,14 +54,15 @@ describe 'Questions Api', type: :request do
         let(:answer) { answers.first }
         let(:answer_response) { question_response['answers'].first }
 
-        it 'returns list ogf answers' do
-          expect(question_response['answers'].size).to eq 3
+        it_behaves_like 'Resource count returnable' do
+          let(:resource_response) { question_response['answers'] }
+          let(:resource) { answers }
         end
 
-        it 'returns all public fields' do
-          %w[id body user_id created_at updated_at].each do |attr|
-            expect(answer_response[attr]).to eq answer.send(attr).as_json
-          end
+        it_behaves_like 'Public fields returnable' do
+          let(:resource) { answer }
+          let(:resource_response) { answer_response }
+          let(:attrs) { %w[id body created_at updated_at] }
         end
       end
     end
@@ -69,10 +81,10 @@ describe 'Questions Api', type: :request do
 
     it_behaves_like 'Success requestable'
 
-    it 'return all public fields' do
-      %w[id title body created_at updated_at].each do |attr|
-        expect(question_response[attr]).to eq question.send(attr).as_json
-      end
+    it_behaves_like 'Public fields returnable' do
+      let(:attrs) { %w[id title body created_at updated_at] }
+      let(:resource_response) { question_response }
+      let(:resource) { question }
     end
 
     describe 'comments' do
@@ -107,12 +119,14 @@ describe 'Questions Api', type: :request do
     context 'authorized' do
       let(:access_token) { create(:access_token) }
 
-      before { get api_path, params: {access_token: access_token.token}, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       context 'with valid attributes' do
         it 'saves a new question' do
-          expect { post api_path, params: { question: attributes_for(:question),
-                                            access_token:access_token.token } }.to change(Question, :count).by(1)
+          expect do
+            post api_path, params: { question: attributes_for(:question),
+                                     access_token: access_token.token }
+          end.to change(Question, :count).by(1)
         end
 
         it 'returns status :created' do
@@ -123,8 +137,10 @@ describe 'Questions Api', type: :request do
 
       context 'with invalid attributes' do
         it 'does not save the question' do
-          expect { post api_path, params: { question: attributes_for(:question, :invalid),
-                                            access_token: access_token.token } }.to_not change(Question, :count)
+          expect do
+            post api_path, params: { question: attributes_for(:question, :invalid),
+                                     access_token: access_token.token }
+          end.to_not change(Question, :count)
         end
 
         it 'returns status :unprocessible_entity' do
@@ -168,6 +184,55 @@ describe 'Questions Api', type: :request do
         it 'return message' do
           expect(json['messages']).to include 'Question deleted'
         end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let(:user) { create(:user) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+    let!(:edit_question) { create(:question, user: user) }
+    let(:api_path) { "/api/v1/questions/#{edit_question.id}" }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :patch }
+    end
+
+    context 'authorized' do
+      context 'with valid attributes' do
+        before do
+          patch api_path,
+                params: { id: edit_question.id, question: { title: 'new title', body: 'new body' },
+                          access_token: access_token.token }
+        end
+
+        it_behaves_like 'Success requestable'
+
+        it 'changes question attributes' do
+          edit_question.reload
+
+          expect(edit_question.title).to eq 'new title'
+          expect(edit_question.body).to eq 'new body'
+        end
+      end
+    end
+
+    context 'not an author tries to update question' do
+      let(:other_user) { create(:user) }
+      let(:other_question) { create(:question, user: other_user) }
+      let(:other_api_path) { "/api/v1/questions/#{other_question.id}" }
+
+      before do
+        patch other_api_path,
+              params: { id: other_question, question: { title: 'new title', body: 'new_body' },
+                        access_token: access_token.token }
+      end
+
+      it 'can not change question attributes' do
+        other_question.reload
+
+        expect(other_question.title).to eq other_question.title
+        expect(other_question.body).to eq other_question.body
       end
     end
   end
