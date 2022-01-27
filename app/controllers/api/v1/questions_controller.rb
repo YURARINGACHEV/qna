@@ -10,6 +10,11 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     render json: question, serializer: QuestionSerializer
   end
 
+  def destroy
+    question.destroy
+    render json: { messages: ['Question deleted'] }
+  end
+
   private
 
   def question
