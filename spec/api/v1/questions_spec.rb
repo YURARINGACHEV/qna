@@ -97,6 +97,49 @@ describe 'Questions Api', type: :request do
     end
   end
 
+  describe 'POST /api/v1/questions' do
+    let(:api_path) { '/api/v1/questions' }
+
+    it_behaves_like 'API Authorizable' do
+      let(:method) { :post }
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+
+      before { get api_path, params: {access_token: access_token.token}, headers: headers }
+
+      context 'with valid attributes' do
+        it 'saves a new question' do
+          expect { post api_path, params: { question: attributes_for(:question),
+                                            access_token:access_token.token } }.to change(Question, :count).by(1)
+        end
+
+        it 'returns status :created' do
+          post api_path, params: { question: attributes_for(:question), access_token: access_token.token }
+          expect(response.status).to eq 201
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not save the question' do
+          expect { post api_path, params: { question: attributes_for(:question, :invalid),
+                                            access_token: access_token.token } }.to_not change(Question, :count)
+        end
+
+        it 'returns status :unprocessible_entity' do
+          post api_path, params: { question: attributes_for(:question, :invalid), access_token: access_token.token }
+          expect(response.status).to eq 422
+        end
+
+        it 'returns error message' do
+          post api_path, params: { question: attributes_for(:question, :invalid), access_token: access_token.token }
+          expect(json['errors']).to be
+        end
+      end
+    end
+  end
+
   describe 'DELETE /api/v1/questions/:id' do
     let(:user) { create(:user) }
     let(:access_token) { create(:access_token, resource_owner_id: user.id) }

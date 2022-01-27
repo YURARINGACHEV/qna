@@ -6,6 +6,16 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 		render json: @questions
 	end
 
+  def create
+    @question = current_resource_owner.questions.new(question_params)
+
+    if @question.save
+      render json: @question, status: :created
+    else
+      render json: { errors: @question.errors }, status: :unprocessable_entity
+    end
+  end
+
 	def show
     render json: question, serializer: QuestionSerializer
   end
@@ -22,4 +32,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
   
   helper_method :question
+
+  def question_params
+    params.require(:question).permit(:title, :body)
+  end
 end
