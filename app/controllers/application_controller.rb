@@ -5,6 +5,5 @@ class ApplicationController < ActionController::Base
     # format.json { render json: exception.message, status: :forbidden }
   end
 
-  check_authorization unless: :devise_controller?
   skip_authorization_check
 end

@@ -1,7 +1,7 @@
 div
   
   .vote-score data-vote-id='#{resource.class.name.underscore}-#{resource.id}'
-    -if resource.present? && resource.rating !=0
+    -if resource&.rating&.nonzero?
       p = resource.rating
 
   -if can?(:vote_up, resource)
