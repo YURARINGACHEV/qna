@@ -34,6 +34,9 @@ class Ability
     can %i[vote_up vote_down unvote], [Question, Answer] do |resource|
       !user.author?(resource)
     end
+
+    can :create,  Subscription
+    can :destroy, Subscription, user_id: user.id
   end
 
   def guest_abilities

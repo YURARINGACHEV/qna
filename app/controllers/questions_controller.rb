@@ -74,4 +74,10 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url],
                                                     reward_attributes: %i[title image])
   end
+
+  def subscription
+    @subscription ||= question.subscriptions.find_by(user: current_user)
+  end
+
+  helper_method :subscription
 end

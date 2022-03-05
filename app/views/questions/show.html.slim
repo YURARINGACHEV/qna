@@ -1,5 +1,8 @@
 .questions
   = render 'question_block', resource: @question
+  .subscription
+    - if can?(:create, Subscription)
+      = render 'subscriptions/subscription', resource: @question
 
 -if can?(:create, Answer)
   = render 'answers/form'
