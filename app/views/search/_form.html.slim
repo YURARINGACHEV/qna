@@ -1,0 +1,7 @@
+.search
+  = form_tag search_path, method: :get do
+    = select_tag :type,
+            options_for_select(SearchService::TYPES, params[:type]),
+            include_blank: 'Global search'
+    = text_field_tag :body, params[:body]
+    = submit_tag 'Search'
